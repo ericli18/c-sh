@@ -6,13 +6,13 @@ int main() {
   // when running tests printf("Logs from your program will appear here!\n");
 
   // Uncomment this block to pass the first stage
-  printf("$ ");
-  fflush(stdout);
 
   // Wait for user input
 
   int yes = 0;
   while (!yes) {
+    printf("$ ");
+    fflush(stdout);
     char input[100];
     fgets(input, 100, stdin);
     input[strlen(input) - 1] = '\0';
