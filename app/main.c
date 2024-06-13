@@ -1,6 +1,13 @@
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+
+int is_executable(const char *path) {
+  struct stat st;
+  return (stat(path, &st) == 0 && st.st_mode & S_IXUSR);
+}
 
 int main() {
   // You can use print statements as follows for debugging, they'll be visible
@@ -38,15 +45,19 @@ int main() {
           break;
         }
       }
-      char *curr_path = strtok(path, ":");
-      while (curr_path != NULL) {
-        char *command = curr_path + (strlen(curr_path) - strlen(arg));
-        if (strcmp(command, arg) == 0) {
-          printf("%s is %s\n", arg, curr_path);
-          flag = 1;
-          break;
+      char *dir = strtok(path, ":");
+      while (dir != NULL && !flag) {
+        DIR *dp = opendir(dir);
+        if (dp != NULL) {
+          char file_path[PATH_MAX];
+          snprintf(file_path, sizeof(file_path), "%s/%s", dir, arg);
+          if (is_executable(file_path)) {
+            flag = 1;
+            printf("%s is %s\n", arg, file_path);
+          }
+          closedir(dp);
         }
-        curr_path = strtok(NULL, ":");
+        dir = strtok(NULL, ":");
       }
 
       if (!flag) {
