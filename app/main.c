@@ -19,10 +19,11 @@ int main() {
     if (strcmp(input, "exit 0") == 0) {
       return 0;
     }
-    if (strncmp("echo", input, sizeof("echo")) == 0) {
+    if (strncmp("echo", input, sizeof("echo") - 1) == 0) {
       printf("%s\n", input + 5);
+    } else {
+      printf("%s: command not found\n", input);
     }
-    printf("%s: command not found\n", input);
   }
   return 0;
 }
