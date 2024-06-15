@@ -46,16 +46,10 @@ void run_executable(const char *path, char **exe_args) {
 }
 
 int main() {
-  // You can use print statements as follows for debugging, they'll be visible
-  // when running tests printf("Logs from your program will appear here!\n");
-
-  // Uncomment this block to pass the first stage
-
-  // Wait for user input
   char *const_path = getenv("PATH");
 
-  char *commands[] = {"exit", "type", "echo"};
-  size_t commands_len = 3;
+  char *commands[] = {"exit", "type", "echo", "pwd", "cd"};
+  size_t commands_len = 5;
 
   int yes = 0;
   while (!yes) {
@@ -103,6 +97,15 @@ int main() {
           printf("%s: not found\n", arg);
         }
       }
+    }else if(strcmp(command, "pwd") == 0)
+    {
+      char dir[PATH_MAX];
+      getcwd(dir, PATH_MAX);
+      printf("%s\n", dir);
+    } else if(strcmp(command, "cd") == 0)
+    {
+      char* dir = strtok_r(NULL, " ", &rest);
+      chdir(dir);
     } else if (executable[0] != '\0') {
       char *exe_args[ARGSIZE];
       exe_args[0] = executable;
