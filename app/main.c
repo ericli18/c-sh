@@ -97,18 +97,32 @@ int main() {
           printf("%s: not found\n", arg);
         }
       }
-    }else if(strcmp(command, "pwd") == 0)
-    {
+    } else if (strcmp(command, "pwd") == 0) {
       char dir[PATH_MAX];
       getcwd(dir, PATH_MAX);
       printf("%s\n", dir);
-    } else if(strcmp(command, "cd") == 0)
-    {
-      char* dir = strtok_r(NULL, " ", &rest);
+    } else if (strcmp(command, "cd") == 0) {
+      char *const_home = getenv("HOME");
+      char home[strlen(const_home) + 1];
+      strcpy(home, const_home);
+
+      char *dir = strtok_r(NULL, " ", &rest);
       int status;
-      status = chdir(dir);
-      if(status == -1)
-      {
+      if (dir == NULL) {
+        status = chdir(home);
+      }
+
+      else if (dir[0] == '~') {
+        strcat(home, dir + 1);
+
+        status = chdir(home);
+      }
+
+      else {
+        status = chdir(dir);
+      }
+
+      if (status == -1) {
         printf("cd: %s: No such file or directory\n", dir);
       }
     } else if (executable[0] != '\0') {
