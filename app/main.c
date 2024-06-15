@@ -105,7 +105,12 @@ int main() {
     } else if(strcmp(command, "cd") == 0)
     {
       char* dir = strtok_r(NULL, " ", &rest);
-      chdir(dir);
+      int status;
+      status = chdir(dir);
+      if(status == -1)
+      {
+        printf("cd: %s: No such file or directory\n", dir);
+      }
     } else if (executable[0] != '\0') {
       char *exe_args[ARGSIZE];
       exe_args[0] = executable;
